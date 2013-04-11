@@ -45,9 +45,9 @@ public class UrbanAirshipModule extends KrollModule {
 	private static boolean onAppCreateCalled = false;
 		
 	public UrbanAirshipModule() {
-        // Module API level 2 no longer automatically registers the module id or name. In order
-        // to have the module name available for the getModuleByName call we must use the
-        // constructor with a name.
+		// Module API level 2 no longer automatically registers the module id or name. In order
+		// to have the module name available for the getModuleByName call we must use the
+		// constructor with a name.
 		super(ModuleName);
 	}
 
@@ -82,7 +82,7 @@ public class UrbanAirshipModule extends KrollModule {
 		super.listenerAdded(type, count, proxy);
 
 		if (EVENT_URBAN_AIRSHIP_CALLBACK.equals(type)) {
-	        synthesizeMessageIfNeeded();
+			synthesizeMessageIfNeeded();
 		}	
 	}
 	
@@ -97,10 +97,10 @@ public class UrbanAirshipModule extends KrollModule {
 				Log.e(LCAT, "Attempt to access Urban Airship while NOT flying. Check startup and configuration settings.");
 			}
 			return flying;
-	    } catch (Exception e) {
+		} catch (Exception e) {
 			Log.e(LCAT, "Error occurred during isFlying check!!!");
-	    	return false;
-	    }
+			return false;
+		}
 	}
 	
 	@Kroll.getProperty @Kroll.method
@@ -152,7 +152,7 @@ public class UrbanAirshipModule extends KrollModule {
 				PushManager.enablePush();
 			else
 				PushManager.disablePush();
-	    }
+		}
 	}
 	
 	@Kroll.getProperty @Kroll.method
@@ -235,8 +235,8 @@ public class UrbanAirshipModule extends KrollModule {
 			UAirship.takeOff(TiApplication.getInstance(), options);
 			
 			// Airship has successfully taken off. Set up the notification handler
-	        PushManager.shared().setIntentReceiver(IntentReceiver.class);	
-	    } catch (Exception e) {
+			PushManager.shared().setIntentReceiver(IntentReceiver.class);
+		} catch (Exception e) {
 			Log.e(LCAT, "Error occurred during takeoff!!!");
 		}
 	}
@@ -301,44 +301,44 @@ public class UrbanAirshipModule extends KrollModule {
 	}
 	
 	public static void handleReceivedMessage(String message, String payload, Boolean clicked, Boolean launchIfNeeded) {
-	    Log.d(LCAT, "Message: " + message + " Payload: " + payload);
-	    
-	    // Get the currently loaded module object. If the activity has been unloaded then this will
-	    // result in uaModule being set to null.
-	    UrbanAirshipModule uaModule = getModule();
-	    
+		Log.d(LCAT, "Message: " + message + " Payload: " + payload);
+
+		// Get the currently loaded module object. If the activity has been unloaded then this will
+		// result in uaModule being set to null.
+		UrbanAirshipModule uaModule = getModule();
+
 		// If instructed to bring the app to the foreground when clicked, then launch it
 		if (clicked && launchIfNeeded && launchAppOnClick()) {
 			launchActivity(message, payload);
 		}		
 
-	    if (uaModule != null) {
-		    HashMap<String, Object> kd = new HashMap<String, Object>();
-		    kd.put("clicked", new Boolean(clicked));
-		    kd.put("message", message);
-		    kd.put("payload", payload);
-		    
+		if (uaModule != null) {
+			HashMap<String, Object> kd = new HashMap<String, Object>();
+			kd.put("clicked", new Boolean(clicked));
+			kd.put("message", message);
+			kd.put("payload", payload);
+
 			uaModule.fireEvent(EVENT_URBAN_AIRSHIP_CALLBACK, kd);
-	    }
+		}
 	}
 	
-    public static void handleRegistrationComplete(String apid, Boolean valid) {
-        Log.d(LCAT, "APID: " + apid + " IsValid: " + valid);
-        
-	    // Get the currently loaded module object. If the activity has been unloaded then this will
-	    // result in uaModule being set to null.
-        UrbanAirshipModule uaModule = getModule();
-        
-        if (uaModule != null) {
-        	HashMap<String, Object> kd = new HashMap<String, Object>();
-        	kd.put("deviceToken", apid);
-        	kd.put("valid", valid);
-        	if (valid) {
-        		uaModule.fireEvent(EVENT_URBAN_AIRSHIP_SUCCESS, kd);
-        	} else {
-        		kd.put("error", "Error occurred registering device");
-        		uaModule.fireEvent(EVENT_URBAN_AIRSHIP_ERROR, kd);
-        	}
-        }
-    }
+	public static void handleRegistrationComplete(String apid, Boolean valid) {
+		Log.d(LCAT, "APID: " + apid + " IsValid: " + valid);
+
+		// Get the currently loaded module object. If the activity has been unloaded then this will
+		// result in uaModule being set to null.
+		UrbanAirshipModule uaModule = getModule();
+
+		if (uaModule != null) {
+			HashMap<String, Object> kd = new HashMap<String, Object>();
+			kd.put("deviceToken", apid);
+			kd.put("valid", valid);
+			if (valid) {
+				uaModule.fireEvent(EVENT_URBAN_AIRSHIP_SUCCESS, kd);
+			} else {
+				kd.put("error", "Error occurred registering device");
+				uaModule.fireEvent(EVENT_URBAN_AIRSHIP_ERROR, kd);
+			}
+		}
+	}
 }

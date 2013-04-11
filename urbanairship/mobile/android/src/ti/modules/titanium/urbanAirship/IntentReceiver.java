@@ -51,20 +51,20 @@ public class IntentReceiver extends BroadcastReceiver {
 		String action = intent.getAction();
 
 		if (action.equals(PushManager.ACTION_PUSH_RECEIVED)) {
-		    String message = intent.getStringExtra(PushManager.EXTRA_ALERT);
-		    HashMap<String, String> extras = getPushExtras(intent);
+			String message = intent.getStringExtra(PushManager.EXTRA_ALERT);
+			HashMap<String, String> extras = getPushExtras(intent);
 
-		    UrbanAirshipModule.handleReceivedMessage(message, extras.toString(), false, false);		    
+			UrbanAirshipModule.handleReceivedMessage(message, extras.toString(), false, false);		    
 		} else if (action.equals(PushManager.ACTION_NOTIFICATION_OPENED)) {
-		    String message = intent.getStringExtra(PushManager.EXTRA_ALERT);
-		    HashMap<String, String> extras = getPushExtras(intent);
-		    
+			String message = intent.getStringExtra(PushManager.EXTRA_ALERT);
+			HashMap<String, String> extras = getPushExtras(intent);
+			
 			UrbanAirshipModule.handleReceivedMessage(message, extras.toString(), true, true);
 		} else if (action.equals(PushManager.ACTION_REGISTRATION_FINISHED)) {
 			String apid = intent.getStringExtra(PushManager.EXTRA_APID);
 			Boolean valid = intent.getBooleanExtra(PushManager.EXTRA_REGISTRATION_VALID, false);
 			
-            UrbanAirshipModule.handleRegistrationComplete(apid, valid);           
+			UrbanAirshipModule.handleRegistrationComplete(apid, valid);           
 		}
 	}
 }
