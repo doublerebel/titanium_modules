@@ -259,9 +259,10 @@ public class UrbanAirshipModule extends KrollModule {
 				if (intent != null) {
 					String message = intent.getStringExtra("message");
 					String payload = intent.getStringExtra("payload");
+					HashMap<String, String> data = (HashMap<String, String>) intent.getSerializableExtra("data");
 					if (message != null) {
 						Log.d(LCAT,"User clicked notification (synthesized)");
-						handleReceivedMessage(message, payload, true, false);
+						handleReceivedMessage(message, payload, data, true, false);
 					}
 				}
 			}
@@ -278,7 +279,7 @@ public class UrbanAirshipModule extends KrollModule {
 		return uaModule;
 	}
 
-	private static void launchActivity(String message, String payload) {
+	private static void launchActivity(String message, String payload, HashMap<String, String> data) {
 		TiApplication appContext = TiApplication.getInstance();
 		
 		// We need to get the class name for the main application activity. That isn't a problem if
@@ -296,11 +297,12 @@ public class UrbanAirshipModule extends KrollModule {
 		// Set the extras to the message and payload so that they are picked up on relaunch of the activity
 		launch.putExtra("message", message);
 		launch.putExtra("payload", payload);
+		launch.putExtra("data", data);
 		
 		appContext.startActivity(launch);		
 	}
 	
-	public static void handleReceivedMessage(String message, String payload, Boolean clicked, Boolean launchIfNeeded) {
+	public static void handleReceivedMessage(String message, String payload, HashMap<String, String> data, Boolean clicked, Boolean launchIfNeeded) {
 		Log.d(LCAT, "Message: " + message + " Payload: " + payload);
 
 		// Get the currently loaded module object. If the activity has been unloaded then this will
@@ -309,7 +311,7 @@ public class UrbanAirshipModule extends KrollModule {
 
 		// If instructed to bring the app to the foreground when clicked, then launch it
 		if (clicked && launchIfNeeded && launchAppOnClick()) {
-			launchActivity(message, payload);
+			launchActivity(message, payload, data);
 		}		
 
 		if (uaModule != null) {
@@ -317,6 +319,7 @@ public class UrbanAirshipModule extends KrollModule {
 			kd.put("clicked", new Boolean(clicked));
 			kd.put("message", message);
 			kd.put("payload", payload);
+			kd.put("data", data);
 
 			uaModule.fireEvent(EVENT_URBAN_AIRSHIP_CALLBACK, kd);
 		}
