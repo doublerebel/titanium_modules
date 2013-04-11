@@ -210,13 +210,13 @@ public class UrbanAirshipModule extends KrollModule {
 	}
 	
 	@Kroll.setProperty @Kroll.method
-	public void setShowOnAppClick(boolean enabled) {
+	public void setShowAppOnClick(boolean enabled) {
 		TiProperties appProperties = TiApplication.getInstance().getAppProperties();
 		appProperties.setBool(PROPERTY_PREFIX + PROPERTY_SHOW_APP_ON_CLICK, enabled);
 	}
 	
 	@Kroll.getProperty @Kroll.method
-	public boolean getShowOnAppClick() {
+	public boolean getShowAppOnClick() {
 		return launchAppOnClick();
 	}
 	
